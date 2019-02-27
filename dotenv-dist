@@ -1,0 +1,10 @@
+# mandatory, see https://dev.netatmo.com/myaccount for creating one
+CLIENT_ID=
+CLIENT_SECRET=
+
+# mandatory if you don't have a valid access token for this ap
+USER=
+PASSWORD=
+
+# if one is defined, no need to set up the user and password
+ACCESS_TOKEN=
