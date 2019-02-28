@@ -6,5 +6,8 @@ CLIENT_SECRET=
 USER=
 PASSWORD=
 
-# if one is defined, no need to set up the user and password
-ACCESS_TOKEN=
+# where to write the rrd data files
+DATA_DIR=/Users/sirven/Downloads
+
+# where to write the rrd graph files
+GRAPH_DIR=/Users/sirven/Downloads

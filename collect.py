@@ -5,13 +5,15 @@ import logging
 import time
 from datetime import datetime
 from netatmo import api
+from netatmo import formatter
+from rrd import record
 
 class App:
     netatmo_client = None
 
-    def __init__(self, access_token=False):
+    def __init__(self):
         logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(levelname)s - %(message)s", datefmt='%Y-%m-%d %H:%M:%S')
-        self.netatmo_client = api.Client(access_token)
+        self.netatmo_client = api.Client()
 
     def dump_weather_data(self):
         data = self.netatmo_client.get_weather_data()["devices"][0]
@@ -22,10 +24,11 @@ class App:
             return
 
         for data_type in data["data_type"]:
-            self.dump_data(data["module_name"], data["dashboard_data"][data_type], data_type, data["dashboard_data"]["time_utc"])
+            self.dump_data(data["module_name"], {data_type: data["dashboard_data"][data_type]}, data["dashboard_data"]["time_utc"])
 
         for module in data["modules"]:
             for data_type in module["data_type"]:
+                data_points = {}
                 data_keys = []
 
                 if data_type == "Wind":
@@ -35,36 +38,24 @@ class App:
                     data_keys.append(data_type)
 
                 for data_key in data_keys:
-                    value = module["dashboard_data"].get(data_key, "-")
-                    self.dump_data(module["module_name"], value, data_key, module["dashboard_data"]["time_utc"])
+                    data_points.update({data_key: module["dashboard_data"].get(data_key, "-")})
+
+                self.dump_data(module["module_name"], data_points, module["dashboard_data"]["time_utc"])
 
 
-    def dump_data(self, name, value, data_type, timestamp):
-        symbol = {
-            "Temperature": "°C",
-            "CO2": "ppm",
-            "Humidity": "%",
-            "Noise": "dB",
-            "Pressure": "mb",
-            "Rain": "mm",
-            "WindStrength": "km/h",
-            "GustStrength": "km/h",
-        }.get(data_type, "")
+    def dump_data(self, name, data_points, timestamp):
+        for data_type in data_points:
+            logging.info("%s %s: %s %s" % (
+                name,
+                formatter.format_name(data_type),
+                data_points.get(data_type),
+                formatter.format_symbol(data_type))
+            )
 
-        data_name = {
-            "WindStrength": "Wind",
-            "GustStrength": "Wind Gust",
-        }.get(data_type, data_type)
-
-        logging.info("%s %s: %s %s" % (
-            name,
-            data_name,
-            value,
-            symbol)
-        )
+        record.add_new_data(name, data_points, timestamp)
 
 if __name__ == "__main__":
-    app = App(os.getenv("ACCESS_TOKEN"))
+    app = App()
 
     while (True):
         app.dump_weather_data()
