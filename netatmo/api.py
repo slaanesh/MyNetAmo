@@ -14,7 +14,7 @@ class Client:
         self.get_tokens()
 
     def get_tokens(self, params=None):
-        logging.info("fetch access token...")
+        logging.info("Fetch access token...")
 
         payload = {
             'client_id': os.getenv("CLIENT_ID"),
@@ -41,8 +41,8 @@ class Client:
             self.refresh_token = tokens["refresh_token"]
             self.scope = tokens["scope"]
 
-            logging.info("Received access token: %s" % self.access_token)
-            logging.info("Received refresh token: %s" % self.refresh_token)
+            logging.debug("Received access token: %s" % self.access_token)
+            logging.debug("Received refresh token: %s" % self.refresh_token)
         except requests.exceptions.HTTPError as error:
             logging.warning(error.response.text)
 

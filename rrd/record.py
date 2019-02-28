@@ -24,7 +24,7 @@ class DataCollector:
             self.create(timestamp)
 
     def get_name(self):
-        return self.name + '_' + '_'.join(self.keys).lower() + '.rrd'
+        return self.name + '.rrd'
 
     def get_ds_name(self, data_name):
         return data_name.replace(' ', '_')[:19]
@@ -36,17 +36,17 @@ class DataCollector:
 
         for source in self.keys:
             ds_name = self.get_ds_name(source)
-            data_sources.append('DS:' + ds_name + ':GAUGE:' + str(self.step) + ':U:U')
+            data_sources.append('DS:' + ds_name + ':GAUGE:' + str(self.step * 3) + ':U:U')
 
         rrdtool.create(
             str(self.rrd_file),
             '--start', str(timestamp - self.step), # so we can insert our first data right away
             '--step', str(self.step),
             data_sources,
-            'RRA:AVERAGE:0.5:1:144',
-            'RRA:MIN:0.5:1:144',
-            'RRA:MAX:0.5:1:144',
-            'RRA:LAST:0.5:1:144'
+            'RRA:AVERAGE:0.5:1:1440',
+            'RRA:MIN:0.5:1:1440',
+            'RRA:MAX:0.5:1:1440',
+            'RRA:LAST:0.5:1:1440'
         )
 
     def add(self, data_points, timestamp):

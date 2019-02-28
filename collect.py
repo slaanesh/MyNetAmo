@@ -23,12 +23,15 @@ class App:
             logging.warning("Device not reachable!")
             return
 
+        data_points = {}
         for data_type in data["data_type"]:
-            self.dump_data(data["module_name"], {data_type: data["dashboard_data"][data_type]}, data["dashboard_data"]["time_utc"])
+            data_points.update({data_type: data["dashboard_data"].get(data_type, None)})
+
+        self.dump_data(data["module_name"], data_points, data["dashboard_data"]["time_utc"])
 
         for module in data["modules"]:
+            data_points = {}
             for data_type in module["data_type"]:
-                data_points = {}
                 data_keys = []
 
                 if data_type == "Wind":
@@ -40,7 +43,7 @@ class App:
                 for data_key in data_keys:
                     data_points.update({data_key: module["dashboard_data"].get(data_key, "-")})
 
-                self.dump_data(module["module_name"], data_points, module["dashboard_data"]["time_utc"])
+            self.dump_data(module["module_name"], data_points, module["dashboard_data"]["time_utc"])
 
 
     def dump_data(self, name, data_points, timestamp):
