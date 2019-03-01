@@ -12,7 +12,8 @@ class DataCollector:
     keys = None
     data_dir = os.getenv('DATA_DIR', './')
     rrd_file = None
-    step = 600
+    step = 300
+    heartbeat = 1800
 
     def __init__(self, name, data_keys, timestamp):
         self.name = name.replace(' ', '_').lower()
@@ -36,7 +37,7 @@ class DataCollector:
 
         for source in self.keys:
             ds_name = self.get_ds_name(source)
-            data_sources.append('DS:' + ds_name + ':GAUGE:' + str(self.step * 3) + ':U:U')
+            data_sources.append('DS:' + ds_name + ':GAUGE:' + str(self.heartbeat) + ':U:U')
 
         rrdtool.create(
             str(self.rrd_file),
