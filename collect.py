@@ -25,11 +25,15 @@ class App:
 
         data_points = {}
         for data_type in data["data_type"]:
-            data_points.update({data_type: data["dashboard_data"].get(data_type, None)})
+            if data["dashboard_data"].get(data_type, None) != None:
+                data_points.update({data_type: data["dashboard_data"].get(data_type)})
 
         self.dump_data(data["module_name"], data_points, data["dashboard_data"]["time_utc"])
 
         for module in data["modules"]:
+            if not module.get('dashboard_data', None):
+                pass
+
             data_points = {}
             for data_type in module["data_type"]:
                 data_keys = []
@@ -41,9 +45,11 @@ class App:
                     data_keys.append(data_type)
 
                 for data_key in data_keys:
-                    data_points.update({data_key: module["dashboard_data"].get(data_key, "-")})
+                    if module["dashboard_data"].get(data_key, None) != None:
+                        data_points.update({data_key: module["dashboard_data"].get(data_key)})
 
-            self.dump_data(module["module_name"], data_points, module["dashboard_data"]["time_utc"])
+            if len(data_points):
+                self.dump_data(module["module_name"], data_points, module["dashboard_data"]["time_utc"])
 
 
     def dump_data(self, name, data_points, timestamp):
