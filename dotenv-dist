@@ -7,7 +7,7 @@ USER=
 PASSWORD=
 
 # where to write the rrd data files
-DATA_DIR=/Users/sirven/Downloads
+DATA_DIR=/your/path/to/store/the/rrd/files
 
 # where to write the rrd graph files
-GRAPH_DIR=/Users/sirven/Downloads
+GRAPH_DIR=/your/path/to/store/the/graphs

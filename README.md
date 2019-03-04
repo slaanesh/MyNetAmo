@@ -15,7 +15,13 @@ $ pipenv install
 $ pipenv run ./collect.py
 ```
 
+## Generating graphs
+
+Make sure you edit `GRAPH_DIR` environment variable, otherwise if left empty the graphs are gooing to be generate in the current directory. To generate graphs:
+```shell
+$ pipenv run ./graph.py
+```
+
 ## Todo
 
-1. Add RRDTool support :)
-2. Support for Thermostats
+Support for Thermostats
