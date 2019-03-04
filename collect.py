@@ -25,7 +25,7 @@ class App:
 
         data_points = {}
         for data_type in data["data_type"]:
-            if data["dashboard_data"].get(data_type, None) != None:
+            if data.get("dashboard_data", {}).get(data_type, None) != None:
                 data_points.update({data_type: data["dashboard_data"].get(data_type)})
 
         self.dump_data(data["module_name"], data_points, data["dashboard_data"]["time_utc"])
@@ -45,7 +45,7 @@ class App:
                     data_keys.append(data_type)
 
                 for data_key in data_keys:
-                    if module["dashboard_data"].get(data_key, None) != None:
+                    if module.get("dashboard_data", {}).get(data_key, None) != None:
                         data_points.update({data_key: module["dashboard_data"].get(data_key)})
 
             if len(data_points):
