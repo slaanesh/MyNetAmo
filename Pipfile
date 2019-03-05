@@ -6,8 +6,5 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-requests = "*"
+requests = ">=2.0"
 rrdtool = "*"
-
-[requires]
-python_version = "3.7"
